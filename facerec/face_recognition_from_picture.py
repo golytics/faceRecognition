@@ -6,6 +6,68 @@ import pandas as pd
 import face_recognition
 import cv2
 
+
+# configuring the page and the logo
+st.set_page_config(page_title='Mohamed Gabr - House Price Prediction', page_icon ='facerec/logo.png', layout = 'wide', initial_sidebar_state = 'auto')
+
+
+import os
+import base64
+
+# the functions to prepare the image to be a hyperlink
+@st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+@st.cache(allow_output_mutation=True)
+def get_img_with_href(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    html_code = f'''
+        <a href="{target_url}">
+            <img src="data:image/{img_format};base64,{bin_str}" />
+        </a>'''
+    return html_code
+
+
+# preparing the layout for the top section of the app
+# dividing the layout vertically (dividing the first row)
+row1_1, row1_2, row1_3 = st.columns((1, 4, 5))
+
+# first row first column
+with row1_1:
+    gif_html = get_img_with_href('facerec/logo.png', 'https://golytics.github.io/')
+    st.markdown(gif_html, unsafe_allow_html=True)
+
+with row1_2:
+    # st.image('logo.png')
+    st.title("Predicting The Penguin Species")
+    st.markdown("<h2>A Famous Machine Learning Project (Practical Project for Students)</h2>", unsafe_allow_html=True)
+
+# first row second column
+with row1_3:
+    st.info(
+        """
+        ##
+        This data product has been prepared to be used as a practical project in the training courses provided by Dr. Mohamed Gabr. Developing the final model required
+        many steps following the CRISP-DM methodology. After building the model we used it to predict the Penguin Speciesr type in this application.
+        """)
+
+
+
+
+
+
+
+
+st.write("""
+This app predicts the **Penguin** species!
+""")
+
+
+
 # CONSTANTS
 PATH_DATA = 'facerec/data/db.csv'
 COLOR_DARK = (0, 0, 153)
