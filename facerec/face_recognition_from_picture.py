@@ -8,7 +8,7 @@ import cv2
 
 
 # configuring the page and the logo
-st.set_page_config(page_title='Mohamed Gabr - House Price Prediction', page_icon ='facerec/logo.png', layout = 'wide', initial_sidebar_state = 'auto')
+st.set_page_config(page_title='Mohamed Gabr - House Price Prediction', page_icon ='logo.png', layout = 'wide', initial_sidebar_state = 'auto')
 
 
 import os
@@ -34,42 +34,52 @@ def get_img_with_href(local_img_path, target_url):
 
 # preparing the layout for the top section of the app
 # dividing the layout vertically (dividing the first row)
-row1_1, row1_2, row1_3 = st.columns((1, 4, 5))
+row1_1, row1_2, row1_3 = st.columns((1, 6, 3))
 
 # first row first column
 with row1_1:
-    gif_html = get_img_with_href('facerec/logo.png', 'https://golytics.github.io/')
+    gif_html = get_img_with_href('logo.png', 'https://golytics.github.io/')
     st.markdown(gif_html, unsafe_allow_html=True)
 
 with row1_2:
     # st.image('logo.png')
-    st.title("Predicting The Penguin Species")
-    st.markdown("<h2>A Famous Machine Learning Project (Practical Project for Students)</h2>", unsafe_allow_html=True)
+    st.title("Face Recognition Model")
+    st.markdown("<h2>A Generic POC for Face Recognition</h2>", unsafe_allow_html=True)
 
 # first row second column
 with row1_3:
     st.info(
         """
         ##
-        This data product has been prepared to be used as a practical project in the training courses provided by Dr. Mohamed Gabr. Developing the final model required
-        many steps following the CRISP-DM methodology. After building the model we used it to predict the Penguin Speciesr type in this application.
-        """)
+        This data product has been prepared as a proof of concept of an artificial intelligence (AI) model to recognize the person from his face
+                """)
 
 
 
 
 
 
+st.subheader('How to use the model?')
+''' 
+You can use the model by following the below steps:
+
+1- You can upload the photo of the person that you want the model to recognize
+
+2- The model will detect the face/ faces in the image and identify them by numbers starting from 0 and those numbers will be listed in the list under the 'select face' section
+
+3- By selecting the number of the face, the model tells you how much the face is similar to the faces in the databsse by showing the below table. Also, you have the option to add the person to the database if he/she doesn't exist in it
+
+4- if you decide to to add the person to the database, you can check the 'add to known faces' checkbox, type the name of the person, type a description about the person, and add him/ her in the database.
+
+Limitations: The model is in the demo phase but the results can be enhanced via training the model using more data. 
+'''
 
 
-st.write("""
-This app predicts the **Penguin** species!
-""")
 
 
 
 # CONSTANTS
-PATH_DATA = 'facerec/data/db.csv'
+PATH_DATA = 'db.csv'
 COLOR_DARK = (0, 0, 153)
 COLOR_WHITE = (255, 255, 255)
 COLS_INFO = ['name', 'description']
@@ -111,17 +121,13 @@ def face_distance_to_conf(face_distance, face_match_threshold=0.6):
         linear_val = 1.0 - (face_distance / (range * 2.0))
         return linear_val + ((1.0 - linear_val) * np.power((linear_val - 0.5) * 2, 0.2))
 
-st.write("بالتجربة على الصور وجدت أنه لا يدرك بعض الوجوه الصغيرة أو غير واضحة الملامح")
+# st.write("بالتجربة على الصور وجدت أنه لا يدرك بعض الوجوه الصغيرة أو غير واضحة الملامح")
 if __name__ == "__main__":
     # disable warning signs:
     # https://discuss.streamlit.io/t/version-0-64-0-deprecation-warning-for-st-file-uploader-decoding/4465
     st.set_option("deprecation.showfileUploaderEncoding", False)
 
-    # title area
-    st.markdown("""
-    # Face Recognition APP
-    > Powered by [*ageitgey* face_recognition](https://github.com/ageitgey/face_recognition/) python engine
-    """)
+
 
     # displays a file uploader widget and return to BytesIO
     image_byte = st.file_uploader(
@@ -155,7 +161,15 @@ if __name__ == "__main__":
 
     if max_faces > 0:
         # select interested face in picture
-        face_idx = st.selectbox("Select face#", range(max_faces))
+        row2_1, row2_2 = st.columns((4, 6))
+
+
+        with row2_1:
+            # st.image('logo.png')
+            face_idx =st.selectbox("Select face#", range(max_faces))
+
+
+        # face_idx = st.selectbox("Select face#", range(max_faces))
         roi = rois[face_idx]
         print(roi.shape[0],"__________________________________________________")
         st.image(BGR_to_RGB(roi), width=min(5*(roi.shape[0]), 1500))
@@ -192,3 +206,8 @@ if __name__ == "__main__":
                 DB.to_csv(PATH_DATA, index=False)
     else:
         st.write('No human face detected.')
+
+    st.info(
+        "The application can be integrated with any solution that requires determining the identity or the presence of a person")
+    with open("style.css") as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
