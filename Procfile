@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run penguins-app.py
+web: sh setup.sh && streamlit run face_recognition_from_picture.py
