@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 
 # CONSTANTS
-WEBCAMNUM = 2 # from videocapture_index_check.py
-PATH_DATA = 'data/DB.csv'
+WEBCAMNUM = 0 # from videocapture_index_check.py
+PATH_DATA = 'facerec/data/db.csv'
 COLOR_DARK = (0, 0, 153)
 COLOR_WHITE = (255, 255, 255)
 COLS_INFO = ['name', 'description']
@@ -33,7 +33,7 @@ def capture_face(video_capture):
         FRAME_WINDOW.image(frame[:, :, ::-1])
         # face detection
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-        rgb_small_frame = small_frame[:, :, ::-1]
+        rgb_small_frame = small_frame[:, :, ::-1]# solution to this problem if it happens: https://github.com/ageitgey/face_recognition/issues/21#issuecomment-287779524
         face_locations = face_recognition.face_locations(rgb_small_frame)
         if len(face_locations) > 0:
             video_capture.release()
@@ -69,11 +69,14 @@ if __name__ == "__main__":
         known_face_names, known_face_encodings = load_known_data()
         video_capture = cv2.VideoCapture(WEBCAMNUM)
         frame = capture_face(video_capture)
+        print(frame, "++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         name, similarity, frame = recognize_frame(frame)
         FRAME_WINDOW.image(frame)
         if similarity > 0.75:
             label = f"**{name}**: *{similarity:.2%} likely*"
             st.markdown(label)
             break
+        else:
+            st.markdown("You are not in our database. Please register yourself!")
     # press to restart the scripts
     st.button('contunue......')

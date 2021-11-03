@@ -7,7 +7,7 @@ import face_recognition
 import cv2
 
 # CONSTANTS
-PATH_DATA = 'data/DB.csv'
+PATH_DATA = 'facerec/data/db.csv'
 COLOR_DARK = (0, 0, 153)
 COLOR_WHITE = (255, 255, 255)
 COLS_INFO = ['name', 'description']
@@ -15,6 +15,7 @@ COLS_ENCODE = [f'v{i}' for i in range(128)]
 
 
 def init_data(data_path=PATH_DATA):
+    # print(data_path)
     if os.path.isfile(data_path):
         return pd.read_csv(data_path)
     else:
@@ -48,7 +49,7 @@ def face_distance_to_conf(face_distance, face_match_threshold=0.6):
         linear_val = 1.0 - (face_distance / (range * 2.0))
         return linear_val + ((1.0 - linear_val) * np.power((linear_val - 0.5) * 2, 0.2))
 
-
+st.write("بالتجربة على الصور وجدت أنه لا يدرك بعض الوجوه الصغيرة أو غير واضحة الملامح")
 if __name__ == "__main__":
     # disable warning signs:
     # https://discuss.streamlit.io/t/version-0-64-0-deprecation-warning-for-st-file-uploader-decoding/4465
@@ -94,7 +95,8 @@ if __name__ == "__main__":
         # select interested face in picture
         face_idx = st.selectbox("Select face#", range(max_faces))
         roi = rois[face_idx]
-        st.image(BGR_to_RGB(roi), width=min(roi.shape[0], 300))
+        print(roi.shape[0],"__________________________________________________")
+        st.image(BGR_to_RGB(roi), width=min(5*(roi.shape[0]), 1500))
 
         # initial database for known faces
         DB = init_data()
@@ -102,7 +104,11 @@ if __name__ == "__main__":
         dataframe = DB[COLS_INFO]
 
         # compare roi to known faces, show distances and similarities
-        face_to_compare = face_recognition.face_encodings(roi)[0]
+        # print(type(face_recognition.face_encodings(roi)))
+        print(len(face_recognition.face_encodings(roi)), "::::::::::::::::::::::::::::::::::")
+        print(face_recognition.face_encodings(roi)[0], "##################")
+        face_to_compare = face_recognition.face_encodings(roi)[0]# ac solution to the error of 'list index out of range' : https://github.com/ageitgey/face_recognition/wiki/Common-Errors#issue-assertion-failed-ssizewidth--0--ssizeheight--0-when-running-the-webcam-examples
+        print(face_to_compare,"++++++++++++++++++++++++++++++++++++++")
         dataframe['distance'] = face_recognition.face_distance(
             face_encodings, face_to_compare
         )
@@ -110,7 +116,7 @@ if __name__ == "__main__":
             lambda distance: f"{face_distance_to_conf(distance):0.2%}"
         )
         st.dataframe(
-            dataframe.sort_values("distance").iloc[:5]
+            dataframe.sort_values("distance").iloc[:10]
             .set_index('name')
         )
 
