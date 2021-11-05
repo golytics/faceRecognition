@@ -2,7 +2,7 @@ wheel==0.37.0
 numpy==1.19.5
 pandas==1.1.5
 plotly==5.3.1
-opencv-contrib-==4.5.4.58
+opencv-contrib
 cmake==3.18.2.post1
 dlib==19.8.1
 face_recognition==1.3.0
