@@ -44,7 +44,7 @@ with row1_1:
 with row1_2:
     # st.image('logo.png')
     st.title("Face Recognition Model")
-    st.markdown("<h2>A Generic POC for Face Recognition</h2>", unsafe_allow_html=True)
+    st.markdown("<h2>A Generic Deep Learning POC for Face Recognition</h2>", unsafe_allow_html=True)
 
 # first row second column
 with row1_3:
