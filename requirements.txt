@@ -3,7 +3,7 @@ numpy
 pandas
 plotly
 opencv-contrib-python
-cmake
+CMake
 dlib
 face_recognition
 streamlit
